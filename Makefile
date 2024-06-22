@@ -32,3 +32,8 @@ $(ESPHOME_NAME).yaml: secrets.yaml
 upload: compile
 	. bin/activate; \
 	esphome upload --device $(DEVICE) $(ESPHOME_NAME).yaml
+
+# Logs
+logs: compile
+	. bin/activate; \
+	esphome logs --device $(DEVICE) $(ESPHOME_NAME).yaml
