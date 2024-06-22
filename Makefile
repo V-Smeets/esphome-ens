@@ -1,5 +1,6 @@
 #
 ESPHOME_NAME	= omnik
+DEVICE		= $(ESPHOME_NAME)
 
 all::
 clean::
@@ -26,3 +27,8 @@ compile: .esphome/build/$(ESPHOME_NAME)/.pioenvs/$(ESPHOME_NAME)/firmware.bin
 	. bin/activate; \
 	esphome compile $(ESPHOME_NAME).yaml
 $(ESPHOME_NAME).yaml: secrets.yaml
+
+# Upload
+upload: compile
+	. bin/activate; \
+	esphome upload --device $(DEVICE) $(ESPHOME_NAME).yaml
