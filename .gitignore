@@ -1,4 +1,5 @@
 bin/
+.esphome/
 include/
 lib/
 lib64
