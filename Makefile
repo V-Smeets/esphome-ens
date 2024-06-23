@@ -27,6 +27,7 @@ compile: .esphome/build/$(ESPHOME_NAME)/.pioenvs/$(ESPHOME_NAME)/firmware.bin
 	. bin/activate; \
 	esphome compile $(ESPHOME_NAME).yaml
 $(ESPHOME_NAME).yaml: secrets.yaml
+	touch "$@"
 
 # Upload
 upload: compile
