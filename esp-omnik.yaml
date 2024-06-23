@@ -1,5 +1,5 @@
 esphome:
-  name: omnik
+  name: esp-omnik
   project:
     name: vsmeets.esphome-ens
     version: 0.0.0

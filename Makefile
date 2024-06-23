@@ -1,5 +1,5 @@
 #
-ESPHOME_NAME	= omnik
+ESPHOME_NAME	= esp-omnik
 DEVICE		= $(ESPHOME_NAME)
 
 all::
