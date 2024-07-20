@@ -41,8 +41,9 @@ uart:
   - id: RxInverter
     baud_rate: 9600
     rx_pin: D7
-    debug:
-      dummy_receiver: true
 
 omnik_logger:
   uart_id: RxLogger
+
+omnik_inverter:
+  uart_id: RxInverter
