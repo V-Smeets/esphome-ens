@@ -24,6 +24,7 @@ bin/esphome: bin/activate
 all:: compile
 clean::
 	$(RM) --recursive .esphome
+	find . -name __pycache__ -type d -print0 | xargs --null --no-run-if-empty rm -rfv
 compile: .esphome/build/$(ESPHOME_NAME)/.pioenvs/$(ESPHOME_NAME)/firmware.bin
 .esphome/build/$(ESPHOME_NAME)/.pioenvs/$(ESPHOME_NAME)/firmware.bin: bin/esphome $(ESPHOME_NAME).yaml components/*/*
 	. bin/activate; \
