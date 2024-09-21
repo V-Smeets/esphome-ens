@@ -4,11 +4,17 @@ esphome:
     name: vsmeets.esphome-ens
     version: 0.0.0
 
+external_components:
+  - source:
+      type: local
+      path: components
+
 esp8266:
   board: d1_mini
 
 # Enable logging
 logger:
+  level: INFO
 
 # Enable Home Assistant API
 api:
@@ -33,10 +39,12 @@ uart:
   - id: RxLogger
     baud_rate: 9600
     rx_pin: D6
-    debug:
-      dummy_receiver: true
   - id: RxInverter
     baud_rate: 9600
     rx_pin: D7
-    debug:
-      dummy_receiver: true
+
+omnik_logger:
+  uart_id: RxLogger
+
+omnik_inverter:
+  uart_id: RxInverter

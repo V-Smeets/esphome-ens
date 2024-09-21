@@ -11,6 +11,8 @@ clean::
 	$(RM) --recursive bin include lib lib64 pyvenv.cfg
 bin/activate:
 	python3 -m venv .
+	. bin/activate; \
+	pip install --upgrade pip wheel
 
 # esphome
 all:: bin/esphome
@@ -22,8 +24,9 @@ bin/esphome: bin/activate
 all:: compile
 clean::
 	$(RM) --recursive .esphome
+	find . -name __pycache__ -type d -print0 | xargs --null --no-run-if-empty rm -rfv
 compile: .esphome/build/$(ESPHOME_NAME)/.pioenvs/$(ESPHOME_NAME)/firmware.bin
-.esphome/build/$(ESPHOME_NAME)/.pioenvs/$(ESPHOME_NAME)/firmware.bin: bin/esphome $(ESPHOME_NAME).yaml
+.esphome/build/$(ESPHOME_NAME)/.pioenvs/$(ESPHOME_NAME)/firmware.bin: bin/esphome $(ESPHOME_NAME).yaml components/*/*
 	. bin/activate; \
 	esphome compile $(ESPHOME_NAME).yaml
 $(ESPHOME_NAME).yaml: secrets.yaml
