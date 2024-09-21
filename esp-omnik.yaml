@@ -2,7 +2,7 @@ esphome:
   name: esp-omnik
   project:
     name: vsmeets.esphome-ens
-    version: 0.0.0
+    version: 1.0.0
 
 external_components:
   - source:
