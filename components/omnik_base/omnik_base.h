@@ -3,6 +3,7 @@
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/text_sensor/text_sensor.h"
 #include "esphome/components/uart/uart.h"
+#include "esphome/core/bytebuffer.h"
 
 #define OMNIK_MESSAGE_ID(control_code, function_code)                          \
   ((control_code << 8) + function_code)
@@ -28,11 +29,10 @@ protected:
    *
    * @param control_code The control code.
    * @param function_code The function code.
-   * @param data The data of the message.
+   * @param buffer The data of the message.
    */
   virtual void process_omnik_message(uint8_t control_code,
-                                     uint8_t function_code,
-                                     std::vector<uint8_t> const &data);
+                                     uint8_t function_code, ByteBuffer &buffer);
 
 private:
   // The time (in milliseconds) at which the last byte has been received.
@@ -134,15 +134,7 @@ std::string to_hex(std::vector<uint8_t> const &buffer, char separator);
 /**
  * Convert the data bytes to an ASCII string.
  */
-std::string to_string(std::vector<uint8_t> const &data);
-
-/**
- * Trim spaces from both sides of the string.
- *
- * @param source The string to trim.
- * @result The trimmed string.
- */
-std::string trim(std::string source);
+std::string to_string(std::vector<uint8_t> const &buffer);
 
 } // namespace omnik_base
 } // namespace esphome
