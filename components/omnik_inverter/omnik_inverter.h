@@ -80,114 +80,117 @@ protected:
    * See omnik_base::OmnikBase for a full description.
    */
   void process_omnik_message(uint8_t control_code, uint8_t function_code,
-                             std::vector<uint8_t> const &data) override;
+                             ByteBuffer &buffer) override;
 
 private:
   /**
    * Process an Omnik message that contains no data.
+   *
+   * @param buffer The data of the message.
+   *               (no data)
    */
-  void omnik_message_no_data(std::vector<uint8_t> const &data) {}
+  void omnik_message_no_data(ByteBuffer &buffer) {}
 
   /**
    * Process an Omnik 0x10/0x80 message.
    *
-   * @param data The data of the message.
-   * 		 data[0-15]: Inverter serial number
+   * @param buffer The data of the message.
+   * 		   data[0-15]: Inverter serial number
    */
-  void omnik_message_10_80(std::vector<uint8_t> const &data);
+  void omnik_message_10_80(ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x10/0x81 message.
    *
-   * @param data The data of the message.
-   * 		 data[0]: Ok (0x06)
+   * @param buffer The data of the message.
+   * 		   data[0]: Ok (0x06)
    */
-  void omnik_message_10_81(std::vector<uint8_t> const &data);
+  void omnik_message_10_81(ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x10/0x84 message.
    *
-   * @param data The data of the message.
-   * 		 data[0]: Ok (0x06)
+   * @param buffer The data of the message.
+   * 		   data[0]: Ok (0x06)
    */
-  void omnik_message_10_84(std::vector<uint8_t> const &data);
+  void omnik_message_10_84(ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x11/0x83 message.
    *
-   * @param data The data of the message.
-   *             data[0]:     ??
-   *             data[1-4]:   Rated power
-   *             data[5-15]:  ??
-   *             data[16-27]: Inverter model
-   *             data[28-43]: Brand
-   *             data[44-59]: Inverter serial number
-   *             data[60-76]: ??
+   * @param buffer The data of the message.
+   *               data[0]:     ??
+   *               data[1-4]:   Rated power
+   *               data[5-15]:  ??
+   *               data[16-27]: Inverter model
+   *               data[28-43]: Brand
+   *               data[44-59]: Inverter serial number
+   *               data[60-76]: ??
    */
-  void omnik_message_11_83(std::vector<uint8_t> const &data);
+  void omnik_message_11_83(ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x11/0x90 message.
    *
-   * @param data The data of the message.
-   *             data[0-1]:   Temperature
-   *             data[2-3]:   PV1 Voltage
-   *             data[4-5]:   PV2 Voltage
-   *             data[6-7]:   PV3 Voltage
-   *             data[8-9]:   PV1 Current
-   *             data[10-11]: PV2 Current
-   *             data[12-13]: PV3 Current
-   *             data[14-15]: R Current
-   *             data[16-17]: S Current
-   *             data[18-19]: T Current
-   *             data[20-21]: R Voltage
-   *             data[22-23]: S Voltage
-   *             data[24-25]: T Voltage
-   *             data[26-27]: R Frequency
-   *             data[28-29]: R Power
-   *             data[30-31]: S Frequency
-   *             data[32-33]: S Power
-   *             data[34-35]: T Frequency
-   *             data[36-37]: T Power
-   *             data[38-39]: Energy today
-   *             data[40-43]: Energy total
-   *             data[44-47]: Hour total
-   *             data[48-49]: Run state
-   *             data[50-51]: Grid voltage fault
-   *             data[52-53]: Grid frequency fault
-   *             data[54-55]: Grid impedance fault
-   *             data[56-57]: Temperature fault
-   *             data[58-59]: PV voltage fault
-   *             data[60-61]: GFCI current fault
-   *             data[62-65]: Error message binary index
-   *             data[66-85]: Inverter main firmware version
-   *             data[86-105]: Inverter slave firmware version
+   * @param buffer The data of the message.
+   *               data[0-1]:   Temperature
+   *               data[2-3]:   PV1 Voltage
+   *               data[4-5]:   PV2 Voltage
+   *               data[6-7]:   PV3 Voltage
+   *               data[8-9]:   PV1 Current
+   *               data[10-11]: PV2 Current
+   *               data[12-13]: PV3 Current
+   *               data[14-15]: R Current
+   *               data[16-17]: S Current
+   *               data[18-19]: T Current
+   *               data[20-21]: R Voltage
+   *               data[22-23]: S Voltage
+   *               data[24-25]: T Voltage
+   *               data[26-27]: R Frequency
+   *               data[28-29]: R Power
+   *               data[30-31]: S Frequency
+   *               data[32-33]: S Power
+   *               data[34-35]: T Frequency
+   *               data[36-37]: T Power
+   *               data[38-39]: Energy today
+   *               data[40-43]: Energy total
+   *               data[44-47]: Hour total
+   *               data[48-49]: Run state
+   *               data[50-51]: Grid voltage fault
+   *               data[52-53]: Grid frequency fault
+   *               data[54-55]: Grid impedance fault
+   *               data[56-57]: Temperature fault
+   *               data[58-59]: PV voltage fault
+   *               data[60-61]: GFCI current fault
+   *               data[62-65]: Error message binary index
+   *               data[66-85]: Inverter main firmware version
+   *               data[86-105]: Inverter slave firmware version
    */
-  void omnik_message_11_90(std::vector<uint8_t> const &data);
+  void omnik_message_11_90(ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x11/0xC3 message.
    *
-   * @param data The data of the message.
-   *             data[0]: Number of alarms.
+   * @param buffer The data of the message.
+   *               data[0]: Number of alarms.
    */
-  void omnik_message_11_c3(std::vector<uint8_t> const &data);
+  void omnik_message_11_c3(ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x12/0xC0 message.
    *
-   * @param data The data of the message.
-   * 		 data[0]: Ok (0x06)
+   * @param buffer The data of the message.
+   * 		   data[0]: Ok (0x06)
    */
-  void omnik_message_12_c0(std::vector<uint8_t> const &data);
+  void omnik_message_12_c0(ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x12/0xC1 message.
    *
-   * @param data The data of the message.
-   * 		 data[0]: Ok (0x06)
+   * @param buffer The data of the message.
+   * 		   data[0]: Ok (0x06)
    */
-  void omnik_message_12_c1(std::vector<uint8_t> const &data);
+  void omnik_message_12_c1(ByteBuffer &buffer);
 };
 
 } // namespace omnik_inverter
