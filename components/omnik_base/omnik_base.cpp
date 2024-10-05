@@ -87,6 +87,39 @@ dump_config(const char *const tag, std::string prefix,
 }
 
 /**
+ * Trim spaces from both sides of the string.
+ *
+ * @param source The string to trim.
+ * @result The trimmed string.
+ */
+static std::string trim(std::string source) {
+  bool last_character_is_space = false;
+
+  std::string::iterator new_begin = source.begin();
+  while (new_begin < source.end() && std::isspace(*new_begin)) {
+    last_character_is_space = true;
+    new_begin++;
+  }
+
+  std::string::iterator new_end = new_begin;
+  for (std::string::iterator it = new_begin; it < source.end(); it++) {
+    if (std::isspace(*it)) {
+      if (!last_character_is_space) {
+        new_end = it;
+      }
+      last_character_is_space = true;
+    } else {
+      last_character_is_space = false;
+    }
+  }
+  if (!last_character_is_space) {
+    new_end = source.end();
+  }
+
+  return {new_begin, new_end};
+}
+
+/**
  * @see the header file.
  */
 void OmnikBase::loop() {
@@ -124,7 +157,7 @@ bool OmnikBase::is_omnik_message_processed(std::vector<uint8_t> const &buffer) {
   if (buffer.size() < 2)
     return false;
   if (buffer[0] != 0x3A || buffer[1] != 0x3A)
-    return false;
+    return true;
 
   // Check the header bytes.
   if (buffer.size() < 11)
@@ -150,8 +183,9 @@ bool OmnikBase::is_omnik_message_processed(std::vector<uint8_t> const &buffer) {
     return true;
   }
 
-  std::vector<uint8_t> data(buffer.begin() + 9, buffer.begin() + 9 + data_size);
-  process_omnik_message(control_code, function_code, data);
+  ByteBuffer byte_buffer = ByteBuffer::wrap(
+      {buffer.begin() + 9, buffer.begin() + 9 + data_size}, BIG);
+  process_omnik_message(control_code, function_code, byte_buffer);
 
   return true;
 }
@@ -244,43 +278,13 @@ std::string to_hex(std::vector<uint8_t> const &buffer, char separator) {
 /**
  * @see the header file.
  */
-std::string to_string(std::vector<uint8_t> const &data) {
+std::string to_string(std::vector<uint8_t> const &buffer) {
   std::string result;
-  result.reserve(data.size());
+  result.reserve(buffer.size());
 
-  std::copy_if(data.begin(), data.end(), std::back_inserter(result),
+  std::copy_if(buffer.begin(), buffer.end(), std::back_inserter(result),
                [](uint8_t byte) { return byte != 0x00; });
-  return result;
-}
-
-/**
- * @see the header file.
- */
-std::string trim(std::string source) {
-  bool last_character_is_space = false;
-
-  std::string::iterator new_begin = source.begin();
-  while (new_begin < source.end() && std::isspace(*new_begin)) {
-    last_character_is_space = true;
-    new_begin++;
-  }
-
-  std::string::iterator new_end = new_begin;
-  for (std::string::iterator it = new_begin; it < source.end(); it++) {
-    if (std::isspace(*it)) {
-      if (!last_character_is_space) {
-        new_end = it;
-      }
-      last_character_is_space = true;
-    } else {
-      last_character_is_space = false;
-    }
-  }
-  if (!last_character_is_space) {
-    new_end = source.end();
-  }
-
-  return {new_begin, new_end};
+  return trim(result);
 }
 
 } // namespace omnik_base

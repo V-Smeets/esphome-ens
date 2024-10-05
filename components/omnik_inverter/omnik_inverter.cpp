@@ -8,82 +8,6 @@ namespace omnik_inverter {
 static const char *const TAG = "omnik_inverter";
 
 /**
- * Convert a 16 bit integer from network representation to host
- * representation.
- */
-static int16_t ntoh16(int16_t value) {
-#if BYTE_ORDER == BIG_ENDIAN
-  return value;
-#else
-  return (value << 8 & 0xFF00) | (value >> 8 & 0x00FF);
-#endif
-}
-
-/**
- * Convert a 16 bit integer from network representation to host
- * representation.
- */
-[[maybe_unused]] static uint16_t ntoh16(uint16_t value) {
-#if BYTE_ORDER == BIG_ENDIAN
-  return value;
-#else
-  return (value << 8 & 0xFF00) | (value >> 8 & 0x00FF);
-#endif
-}
-
-/**
- * Convert a 24 bit integer from network representation to host
- * representation.
- */
-[[maybe_unused]] static int32_t ntoh24(int32_t value) {
-#if BYTE_ORDER == BIG_ENDIAN
-  return value;
-#else
-  return (value << 16 & 0xFF0000) | (value & 0x00FF00) |
-         (value >> 16 & 0x0000FF);
-#endif
-}
-
-/**
- * Convert a 24 bit integer from network representation to host
- * representation.
- */
-static uint32_t ntoh24(uint32_t value) {
-#if BYTE_ORDER == BIG_ENDIAN
-  return value;
-#else
-  return (value << 16 & 0xFF0000) | (value & 0x00FF00) |
-         (value >> 16 & 0x0000FF);
-#endif
-}
-
-/**
- * Convert a 32 bit integer from network representation to host
- * representation.
- */
-[[maybe_unused]] static int32_t ntoh32(int32_t value) {
-#if BYTE_ORDER == BIG_ENDIAN
-  return value;
-#else
-  return (value << 24 & 0xFF000000) | (value << 8 & 0x00FF0000) |
-         (value >> 8 & 0x0000FF00) | (value >> 24 & 0x000000FF);
-#endif
-}
-
-/**
- * Convert a 32 bit integer from network representation to host
- * representation.
- */
-static uint32_t ntoh32(uint32_t value) {
-#if BYTE_ORDER == BIG_ENDIAN
-  return value;
-#else
-  return (value << 24 & 0xFF000000) | (value << 8 & 0x00FF0000) |
-         (value >> 8 & 0x0000FF00) | (value >> 24 & 0x000000FF);
-#endif
-}
-
-/**
  * Convert an integer value to a run state string.
  */
 static std::string to_run_state(uint16_t run_state) {
@@ -224,7 +148,7 @@ void OmnikInverter::dump_config() {
  */
 void OmnikInverter::process_omnik_message(uint8_t control_code,
                                           uint8_t function_code,
-                                          std::vector<uint8_t> const &data) {
+                                          ByteBuffer &data) {
   switch (OMNIK_MESSAGE_ID(control_code, function_code)) {
   case OMNIK_MESSAGE_ID(0x10, 0x80):
     omnik_message_10_80(data);
@@ -271,335 +195,198 @@ void OmnikInverter::process_omnik_message(uint8_t control_code,
 }
 
 /**
- * The data structure of an Omnik 0x10/0x80 message.
- */
-#pragma pack(push, 1)
-typedef struct {
-  char serial_number[16];
-} omnik_message_10_80_t;
-#pragma pack(pop)
-
-/**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_10_80(std::vector<uint8_t> const &data) {
-  const std::size_t expected_size = sizeof(omnik_message_10_80_t);
-  const std::size_t actual_size = data.size();
-  if (actual_size != expected_size) {
-    ESP_LOGE(TAG,
-             "Received not the correct number of bytes: excpected=%d actual=%d",
-             expected_size, actual_size);
-    return;
-  }
-
-  const omnik_message_10_80_t *message =
-      reinterpret_cast<const omnik_message_10_80_t *>(&data[0]);
-
-  serial_device_number_text_sensor_->publish_state(esphome::omnik_base::trim(
-      std::string(message->serial_number, sizeof(message->serial_number))));
+void OmnikInverter::omnik_message_10_80(ByteBuffer &buffer) {
+  std::string serial_number = omnik_base::to_string(buffer.get_vector(16));
+  serial_device_number_text_sensor_->publish_state(serial_number);
 }
 
 /**
- * The data structure of an Omnik 0x10/0x81 message.
- */
-#pragma pack(push, 1)
-typedef struct {
-  uint8_t status;
-} omnik_message_10_81_t;
-#pragma pack(pop)
-
-/**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_10_81(std::vector<uint8_t> const &data) {
-  const std::size_t expected_size = sizeof(omnik_message_10_81_t);
-  const std::size_t actual_size = data.size();
-  if (actual_size != expected_size) {
-    ESP_LOGE(TAG,
-             "Received not the correct number of bytes: excpected=%d actual=%d",
-             expected_size, actual_size);
-    return;
-  }
-
-  const omnik_message_10_81_t *message =
-      reinterpret_cast<const omnik_message_10_81_t *>(&data[0]);
-
-  status_10_81_text_sensor_->publish_state(omnik_base::to_hex(message->status));
+void OmnikInverter::omnik_message_10_81(ByteBuffer &buffer) {
+  uint8_t status = buffer.get_uint8();
+  status_10_81_text_sensor_->publish_state(omnik_base::to_hex(status));
 }
 
 /**
- * The data structure of an Omnik 0x10/0x84 message.
- */
-#pragma pack(push, 1)
-typedef struct {
-  uint8_t status;
-} omnik_message_10_84_t;
-#pragma pack(pop)
-
-/**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_10_84(std::vector<uint8_t> const &data) {
-  const std::size_t expected_size = sizeof(omnik_message_10_84_t);
-  const std::size_t actual_size = data.size();
-  if (actual_size != expected_size) {
-    ESP_LOGE(TAG,
-             "Received not the correct number of bytes: excpected=%d actual=%d",
-             expected_size, actual_size);
-    return;
-  }
-
-  const omnik_message_10_84_t *message =
-      reinterpret_cast<const omnik_message_10_84_t *>(&data[0]);
-
-  status_10_84_text_sensor_->publish_state(omnik_base::to_hex(message->status));
+void OmnikInverter::omnik_message_10_84(ByteBuffer &buffer) {
+  uint8_t status = buffer.get_uint8();
+  status_10_84_text_sensor_->publish_state(omnik_base::to_hex(status));
 }
 
 /**
- * The data structure of an Omnik 0x11/0x83 message.
- */
-#pragma pack(push, 1)
-typedef struct {
-  uint8_t nr_of_phases;
-  char rated_power[6];
-  char country[2];
-  uint32_t firmware_version_main : 24;
-  uint32_t firmware_version_slave;
-  char inverter_model[12];
-  char brand[16];
-  char serial_number[16];
-  char message_11_83_bytes_60_77[17];
-} omnik_message_11_83_t;
-#pragma pack(pop)
-
-/**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_11_83(std::vector<uint8_t> const &data) {
-  const std::size_t expected_size = sizeof(omnik_message_11_83_t);
-  const std::size_t actual_size = data.size();
-  if (actual_size != expected_size) {
-    ESP_LOGE(TAG,
-             "Received not the correct number of bytes: excpected=%d actual=%d",
-             expected_size, actual_size);
-    return;
-  }
+void OmnikInverter::omnik_message_11_83(ByteBuffer &buffer) {
+  uint8_t nr_of_phases = buffer.get_uint8();
+  nr_of_phases_text_sensor_->publish_state(std::to_string(nr_of_phases));
 
-  const omnik_message_11_83_t *message =
-      reinterpret_cast<const omnik_message_11_83_t *>(&data[0]);
+  std::string rated_power = omnik_base::to_string(buffer.get_vector(6));
+  rated_power_text_sensor_->publish_state(rated_power);
 
-  nr_of_phases_text_sensor_->publish_state(
-      esphome::omnik_base::trim(std::to_string(message->nr_of_phases)));
-  rated_power_text_sensor_->publish_state(esphome::omnik_base::trim(
-      std::string(message->rated_power, sizeof(message->rated_power))));
-  country_text_sensor_->publish_state(esphome::omnik_base::trim(
-      std::string(message->country, sizeof(message->country))));
+  std::string country = omnik_base::to_string(buffer.get_vector(2));
+  country_text_sensor_->publish_state(country);
+
+  uint32_t firmware_version_main = buffer.get_uint24();
   firmware_version_main_text_sensor_->publish_state(
-      to_version(ntoh24(message->firmware_version_main)));
-  firmware_version_slave_text_sensor_->publish_state(
-      to_version(ntoh32(message->firmware_version_slave)));
-  inverter_model_text_sensor_->publish_state(esphome::omnik_base::trim(
-      std::string(message->inverter_model, sizeof(message->inverter_model))));
-  brand_text_sensor_->publish_state(esphome::omnik_base::trim(
-      std::string(message->brand, sizeof(message->brand))));
-  serial_device_number_text_sensor_->publish_state(esphome::omnik_base::trim(
-      std::string(message->serial_number, sizeof(message->serial_number))));
-  message_11_83_bytes_60_77_text_sensor_->publish_state(
-      esphome::omnik_base::trim(
-          std::string(message->message_11_83_bytes_60_77,
-                      sizeof(message->message_11_83_bytes_60_77))));
-}
+      to_version(firmware_version_main));
 
-/**
- * The data structure of an Omnik 0x11/0x90 message.
- */
-#pragma pack(push, 1)
-typedef struct {
-  int16_t temperature;
-  uint16_t pv1_voltage;
-  uint16_t pv2_voltage;
-  uint16_t pv3_voltage;
-  uint16_t pv1_current;
-  uint16_t pv2_current;
-  uint16_t pv3_current;
-  uint16_t r_current;
-  uint16_t s_current;
-  uint16_t t_current;
-  uint16_t r_voltage;
-  uint16_t s_voltage;
-  uint16_t t_voltage;
-  uint16_t r_frequency;
-  uint16_t r_power;
-  uint16_t s_frequency;
-  uint16_t s_power;
-  uint16_t t_frequency;
-  uint16_t t_power;
-  uint16_t energy_today;
-  uint32_t energy_total;
-  uint32_t hours_total;
-  uint16_t run_state;
-  uint16_t grid_voltage_fault_value;
-  uint16_t grid_frequency_fault_value;
-  uint16_t grid_impedance_fault_value;
-  uint16_t temperature_fault;
-  uint16_t pv_voltage_fault;
-  uint16_t gfci_current_fault;
-  uint32_t error_message_binary_index;
-  char main_firmware_version[20];
-  char slave_firmware_version[20];
-} omnik_message_11_90_t;
-#pragma pack(pop)
+  uint32_t firmware_version_slave = buffer.get_uint32();
+  firmware_version_slave_text_sensor_->publish_state(
+      to_version(firmware_version_slave));
+
+  std::string inverter_model = omnik_base::to_string(buffer.get_vector(12));
+  inverter_model_text_sensor_->publish_state(inverter_model);
+
+  std::string brand = omnik_base::to_string(buffer.get_vector(16));
+  brand_text_sensor_->publish_state(brand);
+
+  std::string serial_number = omnik_base::to_string(buffer.get_vector(16));
+  serial_device_number_text_sensor_->publish_state(serial_number);
+
+  std::string message_11_83_bytes_60_77 =
+      omnik_base::to_string(buffer.get_vector(17));
+  message_11_83_bytes_60_77_text_sensor_->publish_state(
+      message_11_83_bytes_60_77);
+}
 
 /**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_11_90(std::vector<uint8_t> const &data) {
-  const std::size_t expected_size = sizeof(omnik_message_11_90_t);
-  const std::size_t actual_size = data.size();
-  if (actual_size != expected_size) {
-    ESP_LOGE(TAG,
-             "Received not the correct number of bytes: excpected=%d actual=%d",
-             expected_size, actual_size);
-    return;
-  }
+void OmnikInverter::omnik_message_11_90(ByteBuffer &buffer) {
+  int16_t temperature = buffer.get_int16();
+  temperature_sensor_->publish_state(temperature / 10.0);
 
-  const omnik_message_11_90_t *message =
-      reinterpret_cast<const omnik_message_11_90_t *>(&data[0]);
+  uint16_t pv1_voltage = buffer.get_uint16();
+  pv1_voltage_sensor_->publish_state(pv1_voltage / 10.0);
 
-  temperature_sensor_->publish_state(ntoh16(message->temperature) / 10.0);
-  pv1_voltage_sensor_->publish_state(ntoh16(message->pv1_voltage) / 10.0);
-  pv2_voltage_sensor_->publish_state(ntoh16(message->pv2_voltage) / 10.0);
-  pv3_voltage_sensor_->publish_state(ntoh16(message->pv3_voltage) / 10.0);
-  pv1_current_sensor_->publish_state(ntoh16(message->pv1_current) / 10.0);
-  pv2_current_sensor_->publish_state(ntoh16(message->pv2_current) / 10.0);
-  pv3_current_sensor_->publish_state(ntoh16(message->pv3_current) / 10.0);
-  r_current_sensor_->publish_state(ntoh16(message->r_current) / 10.0);
-  s_current_sensor_->publish_state(ntoh16(message->s_current) / 10.0);
-  t_current_sensor_->publish_state(ntoh16(message->t_current) / 10.0);
-  r_voltage_sensor_->publish_state(ntoh16(message->r_voltage) / 10.0);
-  s_voltage_sensor_->publish_state(ntoh16(message->s_voltage) / 10.0);
-  t_voltage_sensor_->publish_state(ntoh16(message->t_voltage) / 10.0);
-  r_frequency_sensor_->publish_state(ntoh16(message->r_frequency) / 100.0);
-  r_power_sensor_->publish_state(ntoh16(message->r_power) / 1000.0);
-  s_frequency_sensor_->publish_state(ntoh16(message->s_frequency) / 100.0);
-  s_power_sensor_->publish_state(ntoh16(message->s_power) / 1000.0);
-  t_frequency_sensor_->publish_state(ntoh16(message->t_frequency) / 100.0);
-  t_power_sensor_->publish_state(ntoh16(message->t_power) / 1000.0);
-  energy_today_sensor_->publish_state(ntoh16(message->energy_today) / 100.0);
-  energy_total_sensor_->publish_state(ntoh32(message->energy_total) / 10.0);
-  hours_total_sensor_->publish_state(ntoh32(message->hours_total));
-  run_state_text_sensor_->publish_state(
-      to_run_state(ntoh16(message->run_state)));
-  grid_voltage_fault_value_sensor_->publish_state(
-      ntoh16(message->grid_voltage_fault_value) / 10.0);
-  grid_frequency_fault_value_sensor_->publish_state(
-      ntoh16(message->grid_frequency_fault_value) / 100.0);
-  grid_impedance_fault_value_sensor_->publish_state(
-      ntoh16(message->grid_impedance_fault_value) / 1000.0);
-  temperature_fault_sensor_->publish_state(ntoh16(message->temperature_fault) /
-                                           10.0);
-  pv_voltage_fault_sensor_->publish_state(ntoh16(message->pv_voltage_fault) /
-                                          10.0);
-  gfci_current_fault_sensor_->publish_state(
-      ntoh16(message->gfci_current_fault) / 1000.0);
+  uint16_t pv2_voltage = buffer.get_uint16();
+  pv2_voltage_sensor_->publish_state(pv2_voltage / 10.0);
+
+  uint16_t pv3_voltage = buffer.get_uint16();
+  pv3_voltage_sensor_->publish_state(pv3_voltage / 10.0);
+
+  uint16_t pv1_current = buffer.get_uint16();
+  pv1_current_sensor_->publish_state(pv1_current / 10.0);
+
+  uint16_t pv2_current = buffer.get_uint16();
+  pv2_current_sensor_->publish_state(pv2_current / 10.0);
+
+  uint16_t pv3_current = buffer.get_uint16();
+  pv3_current_sensor_->publish_state(pv3_current / 10.0);
+
+  uint16_t r_current = buffer.get_uint16();
+  r_current_sensor_->publish_state(r_current / 10.0);
+
+  uint16_t s_current = buffer.get_uint16();
+  s_current_sensor_->publish_state(s_current / 10.0);
+
+  uint16_t t_current = buffer.get_uint16();
+  t_current_sensor_->publish_state(t_current / 10.0);
+
+  uint16_t r_voltage = buffer.get_uint16();
+  r_voltage_sensor_->publish_state(r_voltage / 10.0);
+
+  uint16_t s_voltage = buffer.get_uint16();
+  s_voltage_sensor_->publish_state(s_voltage / 10.0);
+
+  uint16_t t_voltage = buffer.get_uint16();
+  t_voltage_sensor_->publish_state(t_voltage / 10.0);
+
+  uint16_t r_frequency = buffer.get_uint16();
+  r_frequency_sensor_->publish_state(r_frequency / 100.0);
+
+  uint16_t r_power = buffer.get_uint16();
+  r_power_sensor_->publish_state(r_power / 1000.0);
+
+  uint16_t s_frequency = buffer.get_uint16();
+  s_frequency_sensor_->publish_state(s_frequency / 100.0);
+
+  uint16_t s_power = buffer.get_uint16();
+  s_power_sensor_->publish_state(s_power / 1000.0);
+
+  uint16_t t_frequency = buffer.get_uint16();
+  t_frequency_sensor_->publish_state(t_frequency / 100.0);
+
+  uint16_t t_power = buffer.get_uint16();
+  t_power_sensor_->publish_state(t_power / 1000.0);
+
+  uint16_t energy_today = buffer.get_uint16();
+  energy_today_sensor_->publish_state(energy_today / 100.0);
+
+  uint32_t energy_total = buffer.get_uint32();
+  energy_total_sensor_->publish_state(energy_total / 10.0);
+
+  uint32_t hours_total = buffer.get_uint32();
+  hours_total_sensor_->publish_state(hours_total);
+
+  uint16_t run_state = buffer.get_uint16();
+  run_state_text_sensor_->publish_state(to_run_state(run_state));
+
+  uint16_t grid_voltage_fault_value = buffer.get_uint16();
+  grid_voltage_fault_value_sensor_->publish_state(grid_voltage_fault_value /
+                                                  10.0);
+
+  uint16_t grid_frequency_fault_value = buffer.get_uint16();
+  grid_frequency_fault_value_sensor_->publish_state(grid_frequency_fault_value /
+                                                    100.0);
+
+  uint16_t grid_impedance_fault_value = buffer.get_uint16();
+  grid_impedance_fault_value_sensor_->publish_state(grid_impedance_fault_value /
+                                                    1000.0);
+
+  uint16_t temperature_fault = buffer.get_uint16();
+  temperature_fault_sensor_->publish_state(temperature_fault / 10.0);
+
+  uint16_t pv_voltage_fault = buffer.get_uint16();
+  pv_voltage_fault_sensor_->publish_state(pv_voltage_fault / 10.0);
+
+  uint16_t gfci_current_fault = buffer.get_uint16();
+  gfci_current_fault_sensor_->publish_state(gfci_current_fault / 1000.0);
+
+  uint32_t error_message_binary_index = buffer.get_uint32();
   error_message_binary_index_text_sensor_->publish_state(
-      std::bitset<32>(ntoh32(message->error_message_binary_index)).to_string());
-  std::string main_firmware_version = esphome::omnik_base::trim(std::string(
-      message->main_firmware_version, sizeof(message->main_firmware_version)));
+      std::bitset<32>(error_message_binary_index).to_string());
+
+  std::string main_firmware_version =
+      omnik_base::to_string(buffer.get_vector(20));
   if (!main_firmware_version.empty() && main_firmware_version[0] != '\0') {
     firmware_version_main_text_sensor_->publish_state(main_firmware_version);
   }
-  std::string slave_firmware_version = esphome::omnik_base::trim(
-      std::string(message->slave_firmware_version,
-                  sizeof(message->slave_firmware_version)));
+
+  std::string slave_firmware_version =
+      omnik_base::to_string(buffer.get_vector(20));
   if (!slave_firmware_version.empty() && slave_firmware_version[0] != '\0') {
     firmware_version_slave_text_sensor_->publish_state(slave_firmware_version);
   }
 }
 
 /**
- * The data structure of an Omnik 0x11/0xC3 message.
- */
-#pragma pack(push, 1)
-typedef struct {
-  uint8_t nr_of_alarms;
-} omnik_message_11_c3_t;
-#pragma pack(pop)
-
-/**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_11_c3(std::vector<uint8_t> const &data) {
-  const std::size_t expected_size = sizeof(omnik_message_11_c3_t);
-  const std::size_t actual_size = data.size();
-  if (actual_size != expected_size) {
-    ESP_LOGE(TAG,
-             "Received not the correct number of bytes: excpected=%d actual=%d",
-             expected_size, actual_size);
-    nr_of_alarms_sensor_->publish_state(actual_size); // Fix this!
-    return;
-  }
-
-  const omnik_message_11_c3_t *message =
-      reinterpret_cast<const omnik_message_11_c3_t *>(&data[0]);
-
-  nr_of_alarms_sensor_->publish_state(message->nr_of_alarms);
+void OmnikInverter::omnik_message_11_c3(ByteBuffer &buffer) {
+  uint8_t nr_of_alarms = buffer.get_uint8();
+  nr_of_alarms_sensor_->publish_state(nr_of_alarms);
 }
 
 /**
- * The data structure of an Omnik 0x12/0xC0 message.
- */
-#pragma pack(push, 1)
-typedef struct {
-  uint8_t status;
-} omnik_message_12_c0_t;
-#pragma pack(pop)
-
-/**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_12_c0(std::vector<uint8_t> const &data) {
-  const std::size_t expected_size = sizeof(omnik_message_12_c0_t);
-  const std::size_t actual_size = data.size();
-  if (actual_size != expected_size) {
-    ESP_LOGE(TAG,
-             "Received not the correct number of bytes: excpected=%d actual=%d",
-             expected_size, actual_size);
-    return;
-  }
-
-  const omnik_message_12_c0_t *message =
-      reinterpret_cast<const omnik_message_12_c0_t *>(&data[0]);
-
-  status_12_c0_text_sensor_->publish_state(omnik_base::to_hex(message->status));
+void OmnikInverter::omnik_message_12_c0(ByteBuffer &buffer) {
+  uint8_t status = buffer.get_uint8();
+  status_12_c0_text_sensor_->publish_state(omnik_base::to_hex(status));
 }
 
 /**
- * The data structure of an Omnik 0x12/0xC1 message.
- */
-#pragma pack(push, 1)
-typedef struct {
-  uint8_t status;
-} omnik_message_12_c1_t;
-#pragma pack(pop)
-
-/**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_12_c1(std::vector<uint8_t> const &data) {
-  const std::size_t expected_size = sizeof(omnik_message_12_c1_t);
-  const std::size_t actual_size = data.size();
-  if (actual_size != expected_size) {
-    ESP_LOGE(TAG,
-             "Received not the correct number of bytes: excpected=%d actual=%d",
-             expected_size, actual_size);
-    return;
-  }
-
-  const omnik_message_12_c1_t *message =
-      reinterpret_cast<const omnik_message_12_c1_t *>(&data[0]);
-
-  status_12_c1_text_sensor_->publish_state(omnik_base::to_hex(message->status));
+void OmnikInverter::omnik_message_12_c1(ByteBuffer &buffer) {
+  uint8_t status = buffer.get_uint8();
+  status_12_c1_text_sensor_->publish_state(omnik_base::to_hex(status));
 }
 
 } // namespace omnik_inverter

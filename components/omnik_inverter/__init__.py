@@ -27,12 +27,12 @@ from esphome.const import (
     STATE_CLASS_TOTAL_INCREASING,
     UNIT_AMPERE,
     UNIT_CELSIUS,
+    UNIT_DEGREES,
     UNIT_EMPTY,
     UNIT_HERTZ,
     UNIT_HOUR,
     UNIT_KILOWATT,
     UNIT_KILOWATT_HOURS,
-    UNIT_OHM,
     UNIT_VOLT,
 )
 from ..omnik_base import (
@@ -396,8 +396,7 @@ CONFIG_SCHEMA = CONFIG_SCHEMA_BASE.extend({
     cv.Optional(CONF_GRID_IMPEDANCE_FAULT_VALUE,
                 default={
                     CONF_NAME: "Inverter Grid impedance fault",
-                    CONF_UNIT_OF_MEASUREMENT: UNIT_OHM,
-                    CONF_DEVICE_CLASS: DEVICE_CLASS_CONDUCTIVITY,
+                    CONF_UNIT_OF_MEASUREMENT: UNIT_DEGREES,
                     CONF_STATE_CLASS: STATE_CLASS_MEASUREMENT,
                     CONF_ACCURACY_DECIMALS: 3,
                     CONF_ENTITY_CATEGORY: ENTITY_CATEGORY_NONE,

@@ -29,38 +29,41 @@ protected:
    * See omnik_base::OmnikBase for a full description.
    */
   void process_omnik_message(uint8_t control_code, uint8_t function_code,
-                             std::vector<uint8_t> const &data) override;
+                             ByteBuffer &buffer) override;
 
 private:
   /**
    * Process an Omnik message that contains no data.
+   *
+   * @param buffer The data of the message.
+   *               (no data)
    */
-  void omnik_message_no_data(std::vector<uint8_t> const &data) {}
+  void omnik_message_no_data(ByteBuffer &buffer) {}
 
   /**
    * Process an Omnik 0x10/0x01 message.
    *
-   * @param data The data of the message.
-   * 		 data[0-15]: Inverter serial number
-   * 		 data[16]:   Connected inverter number
+   * @param buffer The data of the message.
+   * 		   data[0-15]: Inverter serial number
+   * 		   data[16]:   Connected inverter number
    */
-  void omnik_message_10_01(std::vector<uint8_t> const &data);
+  void omnik_message_10_01(ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x12/0x40 message.
    *
-   * @param data The data of the message.
-   * 		 data[0-15]: Device serial number (\0 terminated)
+   * @param buffer The data of the message.
+   * 		   data[0-15]: Device serial number (\0 terminated)
    */
-  void omnik_message_12_40(std::vector<uint8_t> const &data);
+  void omnik_message_12_40(ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x12/0x41 message.
    *
-   * @param data The data of the message.
-   * 		 data[0-15]: IP address (\0 terminated)
+   * @param buffer The data of the message.
+   * 		   data[0-15]: IP address (\0 terminated)
    */
-  void omnik_message_12_41(std::vector<uint8_t> const &data);
+  void omnik_message_12_41(ByteBuffer &buffer);
 };
 
 } // namespace omnik_logger

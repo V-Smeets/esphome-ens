@@ -25,18 +25,18 @@ void OmnikLogger::dump_config() {
  */
 void OmnikLogger::process_omnik_message(uint8_t control_code,
                                         uint8_t function_code,
-                                        std::vector<uint8_t> const &data) {
+                                        ByteBuffer &buffer) {
   switch (OMNIK_MESSAGE_ID(control_code, function_code)) {
   case OMNIK_MESSAGE_ID(0x10, 0x01):
-    omnik_message_10_01(data);
+    omnik_message_10_01(buffer);
     break;
 
   case OMNIK_MESSAGE_ID(0x12, 0x40):
-    omnik_message_12_40(data);
+    omnik_message_12_40(buffer);
     break;
 
   case OMNIK_MESSAGE_ID(0x12, 0x41):
-    omnik_message_12_41(data);
+    omnik_message_12_41(buffer);
     break;
 
   case OMNIK_MESSAGE_ID(0x10, 0x00):
@@ -44,7 +44,7 @@ void OmnikLogger::process_omnik_message(uint8_t control_code,
   case OMNIK_MESSAGE_ID(0x11, 0x03):
   case OMNIK_MESSAGE_ID(0x11, 0x10):
   case OMNIK_MESSAGE_ID(0x11, 0x43):
-    omnik_message_no_data(data);
+    omnik_message_no_data(buffer);
     break;
 
   default:
@@ -56,88 +56,31 @@ void OmnikLogger::process_omnik_message(uint8_t control_code,
 }
 
 /**
- * The data structure of an Omnik 0x10/0x01 message.
- */
-typedef struct {
-  char serial_number[16];
-  uint8_t connection_number;
-} omnik_message_10_01_t;
-
-/**
  * @see the header file.
  */
-void OmnikLogger::omnik_message_10_01(std::vector<uint8_t> const &data) {
-  const std::size_t expected_size = sizeof(omnik_message_10_01_t);
-  const std::size_t actual_size = data.size();
-  if (actual_size != expected_size) {
-    ESP_LOGE(TAG,
-             "Received not the correct number of bytes: excpected=%d actual=%d",
-             expected_size, actual_size);
-    return;
-  }
+void OmnikLogger::omnik_message_10_01(ByteBuffer &buffer) {
+  std::string serial_number = omnik_base::to_string(buffer.get_vector(16));
+  ESP_LOGI(TAG, "Inverter serial number: %s", serial_number.c_str());
 
-  const omnik_message_10_01_t *message =
-      reinterpret_cast<const omnik_message_10_01_t *>(&data[0]);
-
-  ESP_LOGI(TAG, "Inverter serial number: %s",
-           std::string(message->serial_number, sizeof(message->serial_number))
-               .c_str());
+  uint8_t connection_number = buffer.get_uint8();
   connection_number_text_sensor_->publish_state(
-      std::to_string(message->connection_number));
+      std::to_string(connection_number));
 }
-
-/*
- * The data structure of an Omnik 0x12/0x40 message.
- */
-typedef struct {
-  char serial_number[16];
-} omnik_message_12_40_t;
 
 /**
  * @see the header file.
  */
-void OmnikLogger::omnik_message_12_40(std::vector<uint8_t> const &data) {
-  const std::size_t expected_size = sizeof(omnik_message_12_40_t);
-  const std::size_t actual_size = data.size();
-  if (actual_size != expected_size) {
-    ESP_LOGE(TAG,
-             "Received not the correct number of bytes: excpected=%d actual=%d",
-             expected_size, actual_size);
-    return;
-  }
-
-  const omnik_message_12_40_t *message =
-      reinterpret_cast<const omnik_message_12_40_t *>(&data[0]);
-
-  serial_device_number_text_sensor_->publish_state(
-      std::string(message->serial_number, sizeof(message->serial_number)));
+void OmnikLogger::omnik_message_12_40(ByteBuffer &buffer) {
+  std::string serial_number = omnik_base::to_string(buffer.get_vector(16));
+  serial_device_number_text_sensor_->publish_state(serial_number);
 }
-
-/**
- * The data structure of an Omnik 0x12/0x41 message.
- */
-typedef struct {
-  char ip_address[16];
-} omnik_message_12_41_t;
 
 /**
  * @see the header file.
  */
-void OmnikLogger::omnik_message_12_41(std::vector<uint8_t> const &data) {
-  const std::size_t expected_size = sizeof(omnik_message_12_41_t);
-  const std::size_t actual_size = data.size();
-  if (actual_size != expected_size) {
-    ESP_LOGE(TAG,
-             "Received not the correct number of bytes: excpected=%d actual=%d",
-             expected_size, actual_size);
-    return;
-  }
-
-  const omnik_message_12_41_t *message =
-      reinterpret_cast<const omnik_message_12_41_t *>(&data[0]);
-
-  ip_address_text_sensor_->publish_state(
-      std::string(message->ip_address, sizeof(message->ip_address)));
+void OmnikLogger::omnik_message_12_41(ByteBuffer &buffer) {
+  std::string ip_address = omnik_base::to_string(buffer.get_vector(16));
+  ip_address_text_sensor_->publish_state(ip_address);
 }
 
 } // namespace omnik_logger
