@@ -247,9 +247,9 @@ void dump_config(const char *const tag, std::string prefix,
  * @see the header file.
  */
 std::string to_hex(uint8_t byte) {
-  char buffer[5];
+  char buffer[3];
 
-  sprintf(buffer, "%02X", byte);
+  snprintf(buffer, sizeof(buffer), "%02X", byte);
   return buffer;
 }
 
