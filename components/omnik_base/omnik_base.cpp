@@ -127,7 +127,7 @@ void OmnikBase::loop() {
 
   // Discard all received data in case the next byte isn't received within a
   // predefined timeout period.
-  if (this->last_received_time_ + RECEIVE_TIMEOUT < now) {
+  if (now - this->last_received_time_ > RECEIVE_TIMEOUT) {
     this->rx_buffer_.clear();
     this->last_received_time_ = now;
   }
