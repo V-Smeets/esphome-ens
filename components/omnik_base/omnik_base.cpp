@@ -256,23 +256,17 @@ std::string to_hex(uint8_t byte) {
 /**
  * @see the header file.
  */
-std::string to_hex(const uint8_t buffer[], size_t length, char separator) {
+std::string to_hex(std::vector<uint8_t> const &buffer, char separator) {
   std::string hex_representation;
 
-  for (size_t i = 0; i < length; i++) {
-    if (i > 0) {
+  for (auto element_iterator = buffer.cbegin();
+       element_iterator != buffer.cend(); element_iterator++) {
+    if (element_iterator != buffer.cbegin()) {
       hex_representation += separator;
     }
-    hex_representation += to_hex(buffer[i]);
+    hex_representation += to_hex(*element_iterator);
   }
   return hex_representation;
-}
-
-/**
- * @see the header file.
- */
-std::string to_hex(std::vector<uint8_t> const &buffer, char separator) {
-  return to_hex(buffer.data(), buffer.size(), separator);
 }
 
 /**
