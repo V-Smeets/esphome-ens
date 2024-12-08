@@ -38,6 +38,6 @@ upload: compile
 	esphome upload --device $(DEVICE) $(ESPHOME_NAME).yaml
 
 # Logs
-logs: compile
+logs: bin/esphome
 	. bin/activate; \
 	esphome logs --device $(DEVICE) $(ESPHOME_NAME).yaml
