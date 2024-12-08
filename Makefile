@@ -1,6 +1,6 @@
 #
 ESPHOME_NAME	= esp-omnik
-DEVICE		= $(ESPHOME_NAME).home
+DEVICE		= $(ESPHOME_NAME).lan
 
 all::
 clean::
