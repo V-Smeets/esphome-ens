@@ -1,6 +1,6 @@
 #
 ESPHOME_NAME	= esp-omnik
-DEVICE		= $(ESPHOME_NAME).home
+DEVICE		= $(ESPHOME_NAME).lan
 
 all::
 clean::
@@ -18,7 +18,7 @@ bin/activate:
 all:: bin/esphome
 bin/esphome: bin/activate
 	. bin/activate; \
-	pip install esphome
+	pip install esphome==2024.10.3
 
 # Compile
 all:: compile
@@ -38,6 +38,6 @@ upload: compile
 	esphome upload --device $(DEVICE) $(ESPHOME_NAME).yaml
 
 # Logs
-logs: compile
+logs: bin/esphome
 	. bin/activate; \
 	esphome logs --device $(DEVICE) $(ESPHOME_NAME).yaml

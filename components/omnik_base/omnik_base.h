@@ -116,16 +116,6 @@ std::string to_hex(uint8_t byte);
  * Convert the byte buffer to a hexadecimal representation.
  *
  * @param buffer The buffer with the bytes.
- * @param length The length of the buffer.
- * @param separator The separator to use between the bytes.
- * @return A string with a hexadecimal representation of the buffer.
- */
-std::string to_hex(const uint8_t buffer[], size_t length, char separator);
-
-/**
- * Convert the byte buffer to a hexadecimal representation.
- *
- * @param buffer The buffer with the bytes.
  * @param separator The separator to use between the bytes.
  * @return A string with a hexadecimal representation of the buffer.
  */
