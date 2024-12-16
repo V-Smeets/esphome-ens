@@ -80,7 +80,7 @@ protected:
    * See omnik_base::OmnikBase for a full description.
    */
   void process_omnik_message(uint8_t control_code, uint8_t function_code,
-                             ByteBuffer &buffer) override;
+                             bytebuffer::ByteBuffer &buffer) override;
 
 private:
   /**
@@ -89,7 +89,7 @@ private:
    * @param buffer The data of the message.
    *               (no data)
    */
-  void omnik_message_no_data(ByteBuffer &buffer) {}
+  void omnik_message_no_data(bytebuffer::ByteBuffer &buffer) {}
 
   /**
    * Process an Omnik 0x10/0x80 message.
@@ -97,7 +97,7 @@ private:
    * @param buffer The data of the message.
    * 		   data[0-15]: Inverter serial number
    */
-  void omnik_message_10_80(ByteBuffer &buffer);
+  void omnik_message_10_80(bytebuffer::ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x10/0x81 message.
@@ -105,7 +105,7 @@ private:
    * @param buffer The data of the message.
    * 		   data[0]: Ok (0x06)
    */
-  void omnik_message_10_81(ByteBuffer &buffer);
+  void omnik_message_10_81(bytebuffer::ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x10/0x84 message.
@@ -113,7 +113,7 @@ private:
    * @param buffer The data of the message.
    * 		   data[0]: Ok (0x06)
    */
-  void omnik_message_10_84(ByteBuffer &buffer);
+  void omnik_message_10_84(bytebuffer::ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x11/0x83 message.
@@ -127,7 +127,7 @@ private:
    *               data[44-59]: Inverter serial number
    *               data[60-76]: ??
    */
-  void omnik_message_11_83(ByteBuffer &buffer);
+  void omnik_message_11_83(bytebuffer::ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x11/0x90 message.
@@ -166,7 +166,7 @@ private:
    *               data[66-85]: Inverter main firmware version
    *               data[86-105]: Inverter slave firmware version
    */
-  void omnik_message_11_90(ByteBuffer &buffer);
+  void omnik_message_11_90(bytebuffer::ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x11/0xC3 message.
@@ -174,7 +174,7 @@ private:
    * @param buffer The data of the message.
    *               data[0]: Number of alarms.
    */
-  void omnik_message_11_c3(ByteBuffer &buffer);
+  void omnik_message_11_c3(bytebuffer::ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x12/0xC0 message.
@@ -182,7 +182,7 @@ private:
    * @param buffer The data of the message.
    * 		   data[0]: Ok (0x06)
    */
-  void omnik_message_12_c0(ByteBuffer &buffer);
+  void omnik_message_12_c0(bytebuffer::ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x12/0xC1 message.
@@ -190,7 +190,7 @@ private:
    * @param buffer The data of the message.
    * 		   data[0]: Ok (0x06)
    */
-  void omnik_message_12_c1(ByteBuffer &buffer);
+  void omnik_message_12_c1(bytebuffer::ByteBuffer &buffer);
 };
 
 } // namespace omnik_inverter

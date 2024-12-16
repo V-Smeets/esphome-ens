@@ -18,7 +18,7 @@ bin/activate:
 all:: bin/esphome
 bin/esphome: bin/activate
 	. bin/activate; \
-	pip install esphome==2024.10.3
+	pip install esphome
 
 # Compile
 all:: compile
