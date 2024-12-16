@@ -301,19 +301,19 @@ void OmnikInverter::omnik_message_11_90(bytebuffer::ByteBuffer &buffer) {
   r_frequency_sensor_->publish_state(r_frequency / 100.0);
 
   uint16_t r_power = buffer.get_uint16();
-  r_power_sensor_->publish_state(r_power / 1000.0);
+  r_power_sensor_->publish_state(r_power);
 
   uint16_t s_frequency = buffer.get_uint16();
   s_frequency_sensor_->publish_state(s_frequency / 100.0);
 
   uint16_t s_power = buffer.get_uint16();
-  s_power_sensor_->publish_state(s_power / 1000.0);
+  s_power_sensor_->publish_state(s_power);
 
   uint16_t t_frequency = buffer.get_uint16();
   t_frequency_sensor_->publish_state(t_frequency / 100.0);
 
   uint16_t t_power = buffer.get_uint16();
-  t_power_sensor_->publish_state(t_power / 1000.0);
+  t_power_sensor_->publish_state(t_power);
 
   uint16_t energy_today = buffer.get_uint16();
   energy_today_sensor_->publish_state(energy_today / 100.0);
