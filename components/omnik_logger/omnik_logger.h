@@ -29,7 +29,7 @@ protected:
    * See omnik_base::OmnikBase for a full description.
    */
   void process_omnik_message(uint8_t control_code, uint8_t function_code,
-                             ByteBuffer &buffer) override;
+                             bytebuffer::ByteBuffer &buffer) override;
 
 private:
   /**
@@ -38,7 +38,7 @@ private:
    * @param buffer The data of the message.
    *               (no data)
    */
-  void omnik_message_no_data(ByteBuffer &buffer) {}
+  void omnik_message_no_data(bytebuffer::ByteBuffer &buffer) {}
 
   /**
    * Process an Omnik 0x10/0x01 message.
@@ -47,7 +47,7 @@ private:
    * 		   data[0-15]: Inverter serial number
    * 		   data[16]:   Connected inverter number
    */
-  void omnik_message_10_01(ByteBuffer &buffer);
+  void omnik_message_10_01(bytebuffer::ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x12/0x40 message.
@@ -55,7 +55,7 @@ private:
    * @param buffer The data of the message.
    * 		   data[0-15]: Device serial number (\0 terminated)
    */
-  void omnik_message_12_40(ByteBuffer &buffer);
+  void omnik_message_12_40(bytebuffer::ByteBuffer &buffer);
 
   /**
    * Process an Omnik 0x12/0x41 message.
@@ -63,7 +63,7 @@ private:
    * @param buffer The data of the message.
    * 		   data[0-15]: IP address (\0 terminated)
    */
-  void omnik_message_12_41(ByteBuffer &buffer);
+  void omnik_message_12_41(bytebuffer::ByteBuffer &buffer);
 };
 
 } // namespace omnik_logger

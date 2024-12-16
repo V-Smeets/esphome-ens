@@ -148,7 +148,7 @@ void OmnikInverter::dump_config() {
  */
 void OmnikInverter::process_omnik_message(uint8_t control_code,
                                           uint8_t function_code,
-                                          ByteBuffer &data) {
+                                          bytebuffer::ByteBuffer &data) {
   switch (OMNIK_MESSAGE_ID(control_code, function_code)) {
   case OMNIK_MESSAGE_ID(0x10, 0x80):
     omnik_message_10_80(data);
@@ -197,7 +197,7 @@ void OmnikInverter::process_omnik_message(uint8_t control_code,
 /**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_10_80(ByteBuffer &buffer) {
+void OmnikInverter::omnik_message_10_80(bytebuffer::ByteBuffer &buffer) {
   std::string serial_number = omnik_base::to_string(buffer.get_vector(16));
   serial_device_number_text_sensor_->publish_state(serial_number);
 }
@@ -205,7 +205,7 @@ void OmnikInverter::omnik_message_10_80(ByteBuffer &buffer) {
 /**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_10_81(ByteBuffer &buffer) {
+void OmnikInverter::omnik_message_10_81(bytebuffer::ByteBuffer &buffer) {
   uint8_t status = buffer.get_uint8();
   status_10_81_text_sensor_->publish_state(omnik_base::to_hex(status));
 }
@@ -213,7 +213,7 @@ void OmnikInverter::omnik_message_10_81(ByteBuffer &buffer) {
 /**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_10_84(ByteBuffer &buffer) {
+void OmnikInverter::omnik_message_10_84(bytebuffer::ByteBuffer &buffer) {
   uint8_t status = buffer.get_uint8();
   status_10_84_text_sensor_->publish_state(omnik_base::to_hex(status));
 }
@@ -221,7 +221,7 @@ void OmnikInverter::omnik_message_10_84(ByteBuffer &buffer) {
 /**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_11_83(ByteBuffer &buffer) {
+void OmnikInverter::omnik_message_11_83(bytebuffer::ByteBuffer &buffer) {
   uint8_t nr_of_phases = buffer.get_uint8();
   nr_of_phases_text_sensor_->publish_state(std::to_string(nr_of_phases));
 
@@ -257,7 +257,7 @@ void OmnikInverter::omnik_message_11_83(ByteBuffer &buffer) {
 /**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_11_90(ByteBuffer &buffer) {
+void OmnikInverter::omnik_message_11_90(bytebuffer::ByteBuffer &buffer) {
   int16_t temperature = buffer.get_int16();
   temperature_sensor_->publish_state(temperature / 10.0);
 
@@ -301,19 +301,19 @@ void OmnikInverter::omnik_message_11_90(ByteBuffer &buffer) {
   r_frequency_sensor_->publish_state(r_frequency / 100.0);
 
   uint16_t r_power = buffer.get_uint16();
-  r_power_sensor_->publish_state(r_power / 1000.0);
+  r_power_sensor_->publish_state(r_power);
 
   uint16_t s_frequency = buffer.get_uint16();
   s_frequency_sensor_->publish_state(s_frequency / 100.0);
 
   uint16_t s_power = buffer.get_uint16();
-  s_power_sensor_->publish_state(s_power / 1000.0);
+  s_power_sensor_->publish_state(s_power);
 
   uint16_t t_frequency = buffer.get_uint16();
   t_frequency_sensor_->publish_state(t_frequency / 100.0);
 
   uint16_t t_power = buffer.get_uint16();
-  t_power_sensor_->publish_state(t_power / 1000.0);
+  t_power_sensor_->publish_state(t_power);
 
   uint16_t energy_today = buffer.get_uint16();
   energy_today_sensor_->publish_state(energy_today / 100.0);
@@ -368,7 +368,7 @@ void OmnikInverter::omnik_message_11_90(ByteBuffer &buffer) {
 /**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_11_c3(ByteBuffer &buffer) {
+void OmnikInverter::omnik_message_11_c3(bytebuffer::ByteBuffer &buffer) {
   uint8_t nr_of_alarms = buffer.get_uint8();
   nr_of_alarms_sensor_->publish_state(nr_of_alarms);
 }
@@ -376,7 +376,7 @@ void OmnikInverter::omnik_message_11_c3(ByteBuffer &buffer) {
 /**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_12_c0(ByteBuffer &buffer) {
+void OmnikInverter::omnik_message_12_c0(bytebuffer::ByteBuffer &buffer) {
   uint8_t status = buffer.get_uint8();
   status_12_c0_text_sensor_->publish_state(omnik_base::to_hex(status));
 }
@@ -384,7 +384,7 @@ void OmnikInverter::omnik_message_12_c0(ByteBuffer &buffer) {
 /**
  * @see the header file.
  */
-void OmnikInverter::omnik_message_12_c1(ByteBuffer &buffer) {
+void OmnikInverter::omnik_message_12_c1(bytebuffer::ByteBuffer &buffer) {
   uint8_t status = buffer.get_uint8();
   status_12_c1_text_sensor_->publish_state(omnik_base::to_hex(status));
 }

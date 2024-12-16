@@ -25,7 +25,7 @@ void OmnikLogger::dump_config() {
  */
 void OmnikLogger::process_omnik_message(uint8_t control_code,
                                         uint8_t function_code,
-                                        ByteBuffer &buffer) {
+                                        bytebuffer::ByteBuffer &buffer) {
   switch (OMNIK_MESSAGE_ID(control_code, function_code)) {
   case OMNIK_MESSAGE_ID(0x10, 0x01):
     omnik_message_10_01(buffer);
@@ -58,7 +58,7 @@ void OmnikLogger::process_omnik_message(uint8_t control_code,
 /**
  * @see the header file.
  */
-void OmnikLogger::omnik_message_10_01(ByteBuffer &buffer) {
+void OmnikLogger::omnik_message_10_01(bytebuffer::ByteBuffer &buffer) {
   std::string serial_number = omnik_base::to_string(buffer.get_vector(16));
   ESP_LOGI(TAG, "Inverter serial number: %s", serial_number.c_str());
 
@@ -70,7 +70,7 @@ void OmnikLogger::omnik_message_10_01(ByteBuffer &buffer) {
 /**
  * @see the header file.
  */
-void OmnikLogger::omnik_message_12_40(ByteBuffer &buffer) {
+void OmnikLogger::omnik_message_12_40(bytebuffer::ByteBuffer &buffer) {
   std::string serial_number = omnik_base::to_string(buffer.get_vector(16));
   serial_device_number_text_sensor_->publish_state(serial_number);
 }
@@ -78,7 +78,7 @@ void OmnikLogger::omnik_message_12_40(ByteBuffer &buffer) {
 /**
  * @see the header file.
  */
-void OmnikLogger::omnik_message_12_41(ByteBuffer &buffer) {
+void OmnikLogger::omnik_message_12_41(bytebuffer::ByteBuffer &buffer) {
   std::string ip_address = omnik_base::to_string(buffer.get_vector(16));
   ip_address_text_sensor_->publish_state(ip_address);
 }

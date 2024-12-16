@@ -14,6 +14,10 @@ OmnikBase = omnik_base.class_(
     cg.Component,
 )
 
+AUTO_LOAD = [
+    "bytebuffer",
+]
+
 CONFIG_SCHEMA_BASE = (
     cv.COMPONENT_SCHEMA
     .extend(uart.UART_DEVICE_SCHEMA)

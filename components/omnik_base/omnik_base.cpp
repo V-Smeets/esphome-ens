@@ -183,8 +183,8 @@ bool OmnikBase::is_omnik_message_processed(std::vector<uint8_t> const &buffer) {
     return true;
   }
 
-  ByteBuffer byte_buffer = ByteBuffer::wrap(
-      {buffer.begin() + 9, buffer.begin() + 9 + data_size}, BIG);
+  bytebuffer::ByteBuffer byte_buffer = bytebuffer::ByteBuffer::wrap(
+      {buffer.begin() + 9, buffer.begin() + 9 + data_size}, bytebuffer::BIG);
   process_omnik_message(control_code, function_code, byte_buffer);
 
   return true;
