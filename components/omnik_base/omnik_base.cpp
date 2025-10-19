@@ -48,6 +48,18 @@ static void dump_config(const char *const tag, std::string prefix,
 }
 
 /**
+ * Log a name with a value, but only in case they are defined (not empty).
+ */
+static void dump_config(const char *const tag, std::string prefix,
+                        std::string name, const esphome::LogString *value) {
+  if (name.empty() or value == NULL) {
+    return;
+  }
+  ESP_LOGCONFIG(tag, "%s%s: %s", prefix.c_str(), name.c_str(),
+                LOG_STR_ARG(value));
+}
+
+/**
  * Log the configuration of an EntityBase.
  */
 static void dump_config(const char *const tag, std::string prefix,
@@ -224,7 +236,7 @@ void dump_config(const char *const tag, std::string prefix,
               state_class_to_string(sensor->get_state_class()));
   dump_config(tag, prefix, "Accuracy Decimals",
               sensor->get_accuracy_decimals());
-  dump_config(tag, prefix, "Unique ID", sensor->unique_id());
+  dump_config(tag, prefix, "Unique ID", sensor->get_object_id_hash());
   dump_config(tag, prefix, "Force Update",
               sensor->get_force_update() ? "true" : "false");
 }
@@ -240,7 +252,7 @@ void dump_config(const char *const tag, std::string prefix,
   }
   dump_config(tag, prefix, (EntityBase *)text_sensor);
   dump_config(tag, prefix, (EntityBase_DeviceClass *)text_sensor);
-  dump_config(tag, prefix, "Unique ID", text_sensor->unique_id());
+  dump_config(tag, prefix, "Unique ID", text_sensor->get_object_id_hash());
 }
 
 /**
