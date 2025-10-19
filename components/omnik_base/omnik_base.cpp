@@ -48,6 +48,18 @@ static void dump_config(const char *const tag, std::string prefix,
 }
 
 /**
+ * Log a name with a value, but only in case they are defined (not empty).
+ */
+static void dump_config(const char *const tag, std::string prefix,
+                        std::string name, const esphome::LogString *value) {
+  if (name.empty() or value == NULL) {
+    return;
+  }
+  ESP_LOGCONFIG(tag, "%s%s: %s", prefix.c_str(), name.c_str(),
+                LOG_STR_ARG(value));
+}
+
+/**
  * Log the configuration of an EntityBase.
  */
 static void dump_config(const char *const tag, std::string prefix,
