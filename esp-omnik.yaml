@@ -2,7 +2,7 @@ esphome:
   name: esp-omnik
   project:
     name: vsmeets.esphome-ens
-    version: 1.2.0
+    version: 1.2.1
 
 external_components:
   - source:
@@ -26,6 +26,7 @@ ota:
     password: !secret ota_password
 
 wifi:
+  min_auth_mode: WPA2
   ssid: !secret wifi_ssid
   password: !secret wifi_password
 

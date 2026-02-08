@@ -109,13 +109,13 @@ CONFIG_SCHEMA = CONFIG_SCHEMA_BASE.extend({
     # Omnik 0x10/0x81 message.
     cv.Optional(CONF_STATUS_10_81,
                 default={
-                    CONF_NAME: "Inverter Status 0x10/0x81",
+                    CONF_NAME: "Inverter Status 0x10-0x81",
                     CONF_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
                 }): ts.text_sensor_schema(),
     # Omnik 0x10/0x84 message.
     cv.Optional(CONF_STATUS_10_84,
                 default={
-                    CONF_NAME: "Inverter Status 0x10/0x84",
+                    CONF_NAME: "Inverter Status 0x10-0x84",
                     CONF_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
                 }): ts.text_sensor_schema(),
     # Omnik 0x11/0x83 message.
@@ -156,7 +156,7 @@ CONFIG_SCHEMA = CONFIG_SCHEMA_BASE.extend({
                 }): ts.text_sensor_schema(),
     cv.Optional(CONF_MESSAGE_11_83_BYTES_60_77,
                 default={
-                    CONF_NAME: "Inverter Message 0x11/0x83 bytes 60-77",
+                    CONF_NAME: "Inverter Message 0x11-0x83 bytes 60-77",
                     CONF_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
                 }): ts.text_sensor_schema(),
     # Omnik 0x11/0x90 message.
@@ -446,13 +446,13 @@ CONFIG_SCHEMA = CONFIG_SCHEMA_BASE.extend({
     # Omnik 0x12/0xC0 message.
     cv.Optional(CONF_STATUS_12_C0,
                 default={
-                    CONF_NAME: "Inverter Status 0x12/0xC0",
+                    CONF_NAME: "Inverter Status 0x12-0xC0",
                     CONF_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
                 }): ts.text_sensor_schema(),
     # Omnik 0x12/0xC1 message.
     cv.Optional(CONF_STATUS_12_C1,
                 default={
-                    CONF_NAME: "Inverter Status 0x12/0xC1",
+                    CONF_NAME: "Inverter Status 0x12-0xC1",
                     CONF_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
                 }): ts.text_sensor_schema(),
 })
