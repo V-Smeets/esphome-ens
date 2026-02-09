@@ -70,7 +70,7 @@ static void dump_config(const char *const tag, std::string prefix,
   dump_config(tag, prefix, "Name", entity_base->get_name());
   dump_config(tag, prefix, "Entity Category",
               to_string(entity_base->get_entity_category()));
-  dump_config(tag, prefix, "Icon", entity_base->get_icon());
+  dump_config(tag, prefix, "Icon", entity_base->get_icon_ref().str());
 }
 
 /**
