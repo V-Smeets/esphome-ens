@@ -82,7 +82,7 @@ static void dump_config(const char *const tag, std::string prefix,
     return;
   }
   dump_config(tag, prefix, "Device Class",
-              entity_base_device_class->get_device_class());
+              entity_base_device_class->get_device_class_ref().str());
 }
 
 /**
