@@ -95,7 +95,7 @@ dump_config(const char *const tag, std::string prefix,
     return;
   }
   dump_config(tag, prefix, "Unit of Measurement",
-              entity_base_unit_of_measurement->get_unit_of_measurement());
+              entity_base_unit_of_measurement->get_unit_of_measurement_ref().str());
 }
 
 /**
