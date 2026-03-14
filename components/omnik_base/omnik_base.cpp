@@ -70,7 +70,14 @@ static void dump_config(const char *const tag, std::string prefix,
   dump_config(tag, prefix, "Name", entity_base->get_name());
   dump_config(tag, prefix, "Entity Category",
               to_string(entity_base->get_entity_category()));
+#if ESPHOME_VERSION_CODE >= VERSION_CODE(2026, 3, 0)
+  char icon_buf[MAX_ICON_LENGTH];
+  const char *icon = entity_base->get_icon_to(icon_buf);
+  const std::string icon_str(icon);
+  dump_config(tag, prefix, "Icon", icon_str);
+#else
   dump_config(tag, prefix, "Icon", entity_base->get_icon_ref().str());
+#endif
 }
 
 /**
@@ -81,8 +88,15 @@ static void dump_config(const char *const tag, std::string prefix,
   if (entity_base_device_class == nullptr) {
     return;
   }
+#if ESPHOME_VERSION_CODE >= VERSION_CODE(2026, 3, 0)
+  char device_class_buf[MAX_DEVICE_CLASS_LENGTH];
+  const char *device_class = entity_base->get_device_class_to(device_class_buf);
+  const std::string device_class_str(device_class);
+  dump_config(tag, prefix, "Device Class", device_class_str);
+#else
   dump_config(tag, prefix, "Device Class",
               entity_base_device_class->get_device_class_ref().str());
+#endif
 }
 
 /**
