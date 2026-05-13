@@ -88,24 +88,6 @@ private:
 };
 
 /**
- * Log the base configuration of an OmnikBase.
- */
-void dump_config(const char *const tag, std::string prefix,
-                 OmnikBase *omnikBase);
-
-/**
- * Log the configuration of a Sensor.
- */
-void dump_config(const char *const tag, std::string prefix,
-                 sensor::Sensor *sensor);
-
-/**
- * Log the configuration of a TextSensor.
- */
-void dump_config(const char *const tag, std::string prefix,
-                 text_sensor::TextSensor *text_sensor);
-
-/**
  * Convert a byte to a hexadecimal representation.
  *
  * @param byte The byte value.
