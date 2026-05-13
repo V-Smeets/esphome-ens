@@ -10,14 +10,10 @@ static const char *const TAG = "omnik_logger";
  * @see the header file.
  */
 void OmnikLogger::dump_config() {
-  ESP_LOGCONFIG(TAG, "OmnikLogger:");
-  omnik_base::dump_config(TAG, "  ", this);
-  ESP_LOGCONFIG(TAG, "  connection_number:");
-  omnik_base::dump_config(TAG, "    ", connection_number_text_sensor_);
-  ESP_LOGCONFIG(TAG, "  ip_address:");
-  omnik_base::dump_config(TAG, "    ", ip_address_text_sensor_);
-  ESP_LOGCONFIG(TAG, "  serial_device_number:");
-  omnik_base::dump_config(TAG, "    ", serial_device_number_text_sensor_);
+  const char prefix[] = "  ";
+  LOG_TEXT_SENSOR(prefix, "connection_number", connection_number_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "ip_address", ip_address_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "serial_device_number", serial_device_number_text_sensor_);
 }
 
 /**
