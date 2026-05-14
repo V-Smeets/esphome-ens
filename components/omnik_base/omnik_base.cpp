@@ -26,79 +26,6 @@ static std::string to_string(EntityCategory entity_category) {
 }
 
 /**
- * Log a name with a value, but only in case they are defined (not empty).
- */
-static void dump_config(const char *const tag, std::string prefix,
-                        std::string name, int value) {
-  if (name.empty()) {
-    return;
-  }
-  ESP_LOGCONFIG(tag, "%s%s: %d", prefix.c_str(), name.c_str(), value);
-}
-
-/**
- * Log a name with a value, but only in case they are defined (not empty).
- */
-static void dump_config(const char *const tag, std::string prefix,
-                        std::string name, std::string value) {
-  if (name.empty() or value.empty()) {
-    return;
-  }
-  ESP_LOGCONFIG(tag, "%s%s: %s", prefix.c_str(), name.c_str(), value.c_str());
-}
-
-/**
- * Log a name with a value, but only in case they are defined (not empty).
- */
-static void dump_config(const char *const tag, std::string prefix,
-                        std::string name, const esphome::LogString *value) {
-  if (name.empty() or value == NULL) {
-    return;
-  }
-  ESP_LOGCONFIG(tag, "%s%s: %s", prefix.c_str(), name.c_str(),
-                LOG_STR_ARG(value));
-}
-
-/**
- * Log the configuration of an EntityBase.
- */
-static void dump_config(const char *const tag, std::string prefix,
-                        EntityBase *entity_base) {
-  if (entity_base == nullptr) {
-    return;
-  }
-  dump_config(tag, prefix, "Name", entity_base->get_name());
-  dump_config(tag, prefix, "Entity Category",
-              to_string(entity_base->get_entity_category()));
-  dump_config(tag, prefix, "Icon", entity_base->get_icon_ref().str());
-}
-
-/**
- * Log the configuration of an EntityBase_DeviceClass.
- */
-static void dump_config(const char *const tag, std::string prefix,
-                        EntityBase_DeviceClass *entity_base_device_class) {
-  if (entity_base_device_class == nullptr) {
-    return;
-  }
-  dump_config(tag, prefix, "Device Class",
-              entity_base_device_class->get_device_class_ref().str());
-}
-
-/**
- * Log the configuration of an EntityBase_UnitOfMeasurement.
- */
-static void
-dump_config(const char *const tag, std::string prefix,
-            EntityBase_UnitOfMeasurement *entity_base_unit_of_measurement) {
-  if (entity_base_unit_of_measurement == nullptr) {
-    return;
-  }
-  dump_config(tag, prefix, "Unit of Measurement",
-              entity_base_unit_of_measurement->get_unit_of_measurement_ref().str());
-}
-
-/**
  * Trim spaces from both sides of the string.
  *
  * @param source The string to trim.
@@ -216,43 +143,6 @@ bool OmnikBase::is_modbus_message_processed(
 bool OmnikBase::is_buffer_processed(std::vector<uint8_t> const &buffer) {
   return is_omnik_message_processed(buffer) ||
          is_modbus_message_processed(buffer);
-}
-
-/**
- * @see the header file.
- */
-void dump_config(const char *const tag, std::string prefix,
-                 OmnikBase *omnikBase) {}
-
-/**
- * @see the header file.
- */
-void dump_config(const char *const tag, std::string prefix,
-                 sensor::Sensor *sensor) {
-  dump_config(tag, prefix, (EntityBase *)sensor);
-  dump_config(tag, prefix, (EntityBase_DeviceClass *)sensor);
-  dump_config(tag, prefix, (EntityBase_UnitOfMeasurement *)sensor);
-  dump_config(tag, prefix, "State Class",
-              state_class_to_string(sensor->get_state_class()));
-  dump_config(tag, prefix, "Accuracy Decimals",
-              sensor->get_accuracy_decimals());
-  dump_config(tag, prefix, "Unique ID", sensor->get_object_id_hash());
-  dump_config(tag, prefix, "Force Update",
-              sensor->get_force_update() ? "true" : "false");
-}
-
-/**
- * @see the header file.
- */
-void dump_config(const char *const tag, std::string prefix,
-                 text_sensor::TextSensor *text_sensor) {
-  if (text_sensor == nullptr) {
-    ESP_LOGCONFIG(tag, "%sNot Used", prefix.c_str());
-    return;
-  }
-  dump_config(tag, prefix, (EntityBase *)text_sensor);
-  dump_config(tag, prefix, (EntityBase_DeviceClass *)text_sensor);
-  dump_config(tag, prefix, "Unique ID", text_sensor->get_object_id_hash());
 }
 
 /**
