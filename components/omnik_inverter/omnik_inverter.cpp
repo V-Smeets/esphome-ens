@@ -43,104 +43,59 @@ static std::string to_version(uint32_t version) {
  * @see the header file.
  */
 void OmnikInverter::dump_config() {
-  ESP_LOGCONFIG(TAG, "OmnikInverter:");
-  omnik_base::dump_config(TAG, "  ", this);
+  const char prefix[] = "  ";
   // Dump sensors of Omnik 0x10/0x80 message.
-  ESP_LOGCONFIG(TAG, "  serial_device_number:");
-  omnik_base::dump_config(TAG, "    ", serial_device_number_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "serial_device_number", serial_device_number_text_sensor_);
   // Dump sensors of Omnik 0x10/0x81 message.
-  ESP_LOGCONFIG(TAG, "  status_10_81:");
-  omnik_base::dump_config(TAG, "    ", status_10_81_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "status_10_81", status_10_81_text_sensor_);
   // Dump sensors of Omnik 0x10/0x84 message.
-  ESP_LOGCONFIG(TAG, "  status_10_84:");
-  omnik_base::dump_config(TAG, "    ", status_10_84_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "status_10_84", status_10_84_text_sensor_);
   // Dump sensors of Omnik 0x11/0x83 message.
-  ESP_LOGCONFIG(TAG, "  nr_of_phases:");
-  omnik_base::dump_config(TAG, "    ", nr_of_phases_text_sensor_);
-  ESP_LOGCONFIG(TAG, "  rated_power:");
-  omnik_base::dump_config(TAG, "    ", rated_power_text_sensor_);
-  ESP_LOGCONFIG(TAG, "  country:");
-  omnik_base::dump_config(TAG, "    ", country_text_sensor_);
-  ESP_LOGCONFIG(TAG, "  firmware_version_main:");
-  omnik_base::dump_config(TAG, "    ", firmware_version_main_text_sensor_);
-  ESP_LOGCONFIG(TAG, "  firmware_version_slave:");
-  omnik_base::dump_config(TAG, "    ", firmware_version_slave_text_sensor_);
-  ESP_LOGCONFIG(TAG, "  inverter_model:");
-  omnik_base::dump_config(TAG, "    ", inverter_model_text_sensor_);
-  ESP_LOGCONFIG(TAG, "  brand:");
-  omnik_base::dump_config(TAG, "    ", brand_text_sensor_);
-  ESP_LOGCONFIG(TAG, "  message_11_83_bytes_60_77:");
-  omnik_base::dump_config(TAG, "    ", message_11_83_bytes_60_77_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "nr_of_phases", nr_of_phases_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "rated_power", rated_power_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "country", country_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "firmware_version_main", firmware_version_main_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "firmware_version_slave", firmware_version_slave_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "inverter_model", inverter_model_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "brand", brand_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "message_11_83_bytes_60_77", message_11_83_bytes_60_77_text_sensor_);
   // Dump sensors of Omnik 0x11/0x90 message.
-  ESP_LOGCONFIG(TAG, "  temperature:");
-  omnik_base::dump_config(TAG, "    ", temperature_sensor_);
-  ESP_LOGCONFIG(TAG, "  pv1_voltage:");
-  omnik_base::dump_config(TAG, "    ", pv1_voltage_sensor_);
-  ESP_LOGCONFIG(TAG, "  pv2_voltage:");
-  omnik_base::dump_config(TAG, "    ", pv2_voltage_sensor_);
-  ESP_LOGCONFIG(TAG, "  pv3_voltage:");
-  omnik_base::dump_config(TAG, "    ", pv3_voltage_sensor_);
-  ESP_LOGCONFIG(TAG, "  pv1_current:");
-  omnik_base::dump_config(TAG, "    ", pv1_current_sensor_);
-  ESP_LOGCONFIG(TAG, "  pv2_current:");
-  omnik_base::dump_config(TAG, "    ", pv2_current_sensor_);
-  ESP_LOGCONFIG(TAG, "  pv3_current:");
-  omnik_base::dump_config(TAG, "    ", pv3_current_sensor_);
-  ESP_LOGCONFIG(TAG, "  r_current:");
-  omnik_base::dump_config(TAG, "    ", r_current_sensor_);
-  ESP_LOGCONFIG(TAG, "  s_current:");
-  omnik_base::dump_config(TAG, "    ", s_current_sensor_);
-  ESP_LOGCONFIG(TAG, "  t_current:");
-  omnik_base::dump_config(TAG, "    ", t_current_sensor_);
-  ESP_LOGCONFIG(TAG, "  r_voltage:");
-  omnik_base::dump_config(TAG, "    ", r_voltage_sensor_);
-  ESP_LOGCONFIG(TAG, "  s_voltage:");
-  omnik_base::dump_config(TAG, "    ", s_voltage_sensor_);
-  ESP_LOGCONFIG(TAG, "  t_voltage:");
-  omnik_base::dump_config(TAG, "    ", t_voltage_sensor_);
-  ESP_LOGCONFIG(TAG, "  r_frequency:");
-  omnik_base::dump_config(TAG, "    ", r_frequency_sensor_);
-  ESP_LOGCONFIG(TAG, "  r_power:");
-  omnik_base::dump_config(TAG, "    ", r_power_sensor_);
-  ESP_LOGCONFIG(TAG, "  s_frequency:");
-  omnik_base::dump_config(TAG, "    ", s_frequency_sensor_);
-  ESP_LOGCONFIG(TAG, "  s_power:");
-  omnik_base::dump_config(TAG, "    ", s_power_sensor_);
-  ESP_LOGCONFIG(TAG, "  t_frequency:");
-  omnik_base::dump_config(TAG, "    ", t_frequency_sensor_);
-  ESP_LOGCONFIG(TAG, "  t_power:");
-  omnik_base::dump_config(TAG, "    ", t_power_sensor_);
-  ESP_LOGCONFIG(TAG, "  energy_today:");
-  omnik_base::dump_config(TAG, "    ", energy_today_sensor_);
-  ESP_LOGCONFIG(TAG, "  energy_total:");
-  omnik_base::dump_config(TAG, "    ", energy_total_sensor_);
-  ESP_LOGCONFIG(TAG, "  hours_total:");
-  omnik_base::dump_config(TAG, "    ", hours_total_sensor_);
-  ESP_LOGCONFIG(TAG, "  run_state:");
-  omnik_base::dump_config(TAG, "    ", run_state_text_sensor_);
-  ESP_LOGCONFIG(TAG, "  grid_voltage_fault_value:");
-  omnik_base::dump_config(TAG, "    ", grid_voltage_fault_value_sensor_);
-  ESP_LOGCONFIG(TAG, "  grid_frequency_fault_value:");
-  omnik_base::dump_config(TAG, "    ", grid_frequency_fault_value_sensor_);
-  ESP_LOGCONFIG(TAG, "  grid_impedance_fault_value:");
-  omnik_base::dump_config(TAG, "    ", grid_impedance_fault_value_sensor_);
-  ESP_LOGCONFIG(TAG, "  temperature_fault:");
-  omnik_base::dump_config(TAG, "    ", temperature_fault_sensor_);
-  ESP_LOGCONFIG(TAG, "  pv_voltage_fault:");
-  omnik_base::dump_config(TAG, "    ", pv_voltage_fault_sensor_);
-  ESP_LOGCONFIG(TAG, "  gfci_current_fault:");
-  omnik_base::dump_config(TAG, "    ", gfci_current_fault_sensor_);
-  ESP_LOGCONFIG(TAG, "  error_message_binary_index:");
-  omnik_base::dump_config(TAG, "    ", error_message_binary_index_text_sensor_);
+  LOG_SENSOR(prefix, "temperature", temperature_sensor_);
+  LOG_SENSOR(prefix, "pv1_voltage", pv1_voltage_sensor_);
+  LOG_SENSOR(prefix, "pv2_voltage", pv2_voltage_sensor_);
+  LOG_SENSOR(prefix, "pv3_voltage", pv3_voltage_sensor_);
+  LOG_SENSOR(prefix, "pv1_current", pv1_current_sensor_);
+  LOG_SENSOR(prefix, "pv2_current", pv2_current_sensor_);
+  LOG_SENSOR(prefix, "pv3_current", pv3_current_sensor_);
+  LOG_SENSOR(prefix, "r_current", r_current_sensor_);
+  LOG_SENSOR(prefix, "s_current", s_current_sensor_);
+  LOG_SENSOR(prefix, "t_current", t_current_sensor_);
+  LOG_SENSOR(prefix, "r_voltage", r_voltage_sensor_);
+  LOG_SENSOR(prefix, "s_voltage", s_voltage_sensor_);
+  LOG_SENSOR(prefix, "t_voltage", t_voltage_sensor_);
+  LOG_SENSOR(prefix, "r_frequency", r_frequency_sensor_);
+  LOG_SENSOR(prefix, "r_power", r_power_sensor_);
+  LOG_SENSOR(prefix, "s_frequency", s_frequency_sensor_);
+  LOG_SENSOR(prefix, "s_power", s_power_sensor_);
+  LOG_SENSOR(prefix, "t_frequency", t_frequency_sensor_);
+  LOG_SENSOR(prefix, "t_power", t_power_sensor_);
+  LOG_SENSOR(prefix, "energy_today", energy_today_sensor_);
+  LOG_SENSOR(prefix, "energy_total", energy_total_sensor_);
+  LOG_SENSOR(prefix, "hours_total", hours_total_sensor_);
+  LOG_TEXT_SENSOR(prefix, "run_state", run_state_text_sensor_);
+  LOG_SENSOR(prefix, "grid_voltage_fault_value", grid_voltage_fault_value_sensor_);
+  LOG_SENSOR(prefix, "grid_frequency_fault_value", grid_frequency_fault_value_sensor_);
+  LOG_SENSOR(prefix, "grid_impedance_fault_value", grid_impedance_fault_value_sensor_);
+  LOG_SENSOR(prefix, "temperature_fault", temperature_fault_sensor_);
+  LOG_SENSOR(prefix, "pv_voltage_fault", pv_voltage_fault_sensor_);
+  LOG_SENSOR(prefix, "gfci_current_fault", gfci_current_fault_sensor_);
+  LOG_TEXT_SENSOR(prefix, "error_message_binary_index", error_message_binary_index_text_sensor_);
   // Dump sensors of Omnik 0x11/0xC3 message.
-  ESP_LOGCONFIG(TAG, "  nr_of_alarms:");
-  omnik_base::dump_config(TAG, "    ", nr_of_alarms_sensor_);
+  LOG_SENSOR(prefix, "nr_of_alarms", nr_of_alarms_sensor_);
   // Dump sensors of Omnik 0x12/0xC0 message.
-  ESP_LOGCONFIG(TAG, "  status_12_C0:");
-  omnik_base::dump_config(TAG, "    ", status_12_c0_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "status_12_C0", status_12_c0_text_sensor_);
   // Dump sensors of Omnik 0x12/0xC1 message.
-  ESP_LOGCONFIG(TAG, "  status_12_C1:");
-  omnik_base::dump_config(TAG, "    ", status_12_c1_text_sensor_);
+  LOG_TEXT_SENSOR(prefix, "status_12_C1", status_12_c1_text_sensor_);
 }
 
 /**
