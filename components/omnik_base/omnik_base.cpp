@@ -10,22 +10,6 @@ static const char *const LOG_TAG = "omnik_base";
 static const uint32_t RECEIVE_TIMEOUT = 50;
 
 /**
- * Convert an EntityCategory to a string.
- */
-static std::string to_string(EntityCategory entity_category) {
-  switch (entity_category) {
-  case ENTITY_CATEGORY_NONE:
-    return "None";
-  case ENTITY_CATEGORY_CONFIG:
-    return "Config";
-  case ENTITY_CATEGORY_DIAGNOSTIC:
-    return "Diagnostic";
-  default:
-    return "<Illegal Value>";
-  }
-}
-
-/**
  * Trim spaces from both sides of the string.
  *
  * @param source The string to trim.
